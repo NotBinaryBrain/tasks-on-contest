@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Popups</title>
+	<meta charset="utf-8"/>
+	<style>
+		html, body {
+			min-height: 5000px;
+			background: #f1f1f1;
+			padding: 10px;
+		}
+		a {
+			width: 150px;
+			height: 30px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			background: #fff;
+			display: inline-block;
+			text-align: center;
+			line-height: 30px;
+			color: #888;
+			text-decoration: none;
+			-webkit-transition: all .5s;
+			-moz-transition: all .5s;
+			-o-transition: all .5s;
+			transition: all .5s;
+			margin: 7px 15px 7px 0;
+		}
+		a:hover {
+			background: #ccc;
+			color: #fff;
+		}
+		.wrapper-popup3, .wrapper-popup4 {
+			width: 100%;
+			height: 100%;
+			min-height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			overflow: auto;
+			display: none;;
+		}
+		[class^="popup"] {
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,.3);
+			position: fixed;
+			top: 0;
+			left: 0;
+			cursor: pointer;
+			overflow-x: auto;
+			display: none;
+		}
+			.popup1 div, .popup2 div, .popup5 div  {
+				width: 550px;
+				height: 350px;
+				left: 50%;
+				top: 50%;
+				margin-top: -175px;
+				margin-left: -275px;
+				position: fixed;
+				background: #fff;
+				padding: 20px;
+				overflow-y: auto;
+				cursor: default;
+				display: block;
+			}
+			.popup3, .popup4 {
+				position: inherit;
+			}
+			.popup3 div, .popup4 div {
+				width: 550px;
+				height: auto;
+				min-height: 740px;
+				left: 50%;
+				margin-top: 20px;
+				margin-left: -275px;
+				position: absolute;
+				background: #fff;
+				padding: 20px;
+				overflow-y: auto;
+				cursor: default;
+				display: block;
+			}
+
+		@media screen and (max-width: 660px) {
+			.popup4 div {
+				width: 100%;
+				left: 0;
+				margin: 30px 0;
+				padding: 0;
+			}
+			.popup4 div > * {
+				padding: 0 30px;
+			}
+		}
+	</style>
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script>
+		$(document).ready(function(){
+
+			// popup2
+			$('[data-id="popup-2"]').click(function () {
+				$('body').css('overflow', 'hidden');
+				$('.popup2').css('display', 'block');
+			});
+
+			$('.popup2').click(function () {
+				$(this).css('display', 'none');
+				$(this).children('div').removeClass('active');
+				$('body').css('overflow', 'auto');
+			});
+
+			// popup3
+			$('[data-id="popup-3"]').click(function () {
+				$('body').css('overflow', 'hidden');
+				$('.popup3, .wrapper-popup3').css('display', 'block');
+				$('.popup3').css('height', 900);
+			});
+
+			$('.popup3').click(function () {
+				$(this).css('display', 'none');
+				$('.wrapper-popup3').css('display', 'none');
+				$(this).children('div').removeClass('active');
+				$('body').css('overflow', 'auto');
+			});
+
+			// popup4
+			$('[data-id="popup-4"]').click(function () {
+				$('body').css('overflow', 'hidden');
+				$('.popup4, .wrapper-popup4').css('display', 'block');
+				$('.popup3').css('height', 900);
+			});
+
+			$('.popup4').click(function () {
+				$(this).css('display', 'none');
+				$('.wrapper-popup4').css('display', 'none');
+				$(this).children('div').removeClass('active');
+				$('body').css('overflow', 'auto');
+			});
+
+			// popup5
+			$('[data-id="popup-5"]').click(function () {
+				$('body').css('overflow', 'hidden');
+				$('.popup5').css('display', 'block');
+			});
+
+			$('.popup5').click(function () {
+				$(this).css('display', 'none');
+				$(this).children('div').removeClass('active');
+				$('body').css('overflow', 'auto');
+			});
+
+			function initPopup5 () {
+				if ($(this).width() < 660) {
+					$('.popup5 div').css({
+						'width': '100%',
+						'left': '0',
+						'top': '0',
+						'margin': '30px 0',
+						'padding': '0'
+					});
+				} else {
+					$('.popup5 div').css({
+						'width': '550px',
+						'left': '50%',
+						'top': '50%',
+						'margin': '-175px 0 0 -275px',
+						'padding': '20px'
+					});
+				}
+				if ($(this).height() < 400) {
+					$('.popup5 div').css({
+						'height': '100%'
+					});
+				} else {
+					$('.popup5 div').css({
+						'height': '400px'
+					});
+				}
+			}
+			initPopup5();
+
+			$(window).resize(function () {
+				initPopup5();
+			});
+
+			// не закрываем при клике на сам попап
+			$('[class^="popup"] div').click(function (e) {
+				e.stopPropagation();
+				return false;
+			})
+		});
+	</script>
+</head>
+<body>
+	<h1>Всплывающие окна.</h1>
+	<div class="controls">
+		<a href="#" data-id="popup1" onclick="$('.' + $(this).attr('data-id')).css('display', 'block'); return false;">Открыть попап 1</a>
+		<a href="#" data-id="popup-2">Открыть попап 2</a>
+		<a href="#" data-id="popup-3">Открыть попап 3</a>
+		<a href="#" data-id="popup-4">Открыть попап 4</a>
+		<a href="#" data-id="popup-5">Открыть попап 5</a>
+	</div>
+
+	<div class="wrap">
+
+		<div class="popup1" onclick="$(this).css('display', 'none');">
+			<div>
+				<h2>Я — первый попап.</h2>
+				<h3>Как я сделан?</h3>
+				<ul>
+					<li><i>top</i> и <i>left</i> 50%;</li>
+					<li><i>margin-top</i> и <i>margin-left</i> принимают половину высоты и ширины div соответственно;</li>
+					<li>фиксированая ширина.</li>
+				</ul>
+				<h3>Плюсы:</h3>
+				<ul>
+					<li>Простота и лёгкость реализации;</li>
+					<li>Для изменения положения и размеров не используется js;</li>
+					<li>Для открытия и закрытия используются onclick обработчики.</li>
+				</ul>
+				<h3>Минусы:</h3>
+				<ul>
+					<li>Уезжает за границы экрана;</li>
+					<li>Двойная прокрутка: у страницы и у попапа;</li>
+					<li>Скорллится страница.</li>
+				</ul>
+				<h3>Ещё текст</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+			</div>
+		</div>
+
+		<div class="popup2">
+			<div>
+				<h2>Я — второй попап.</h2>
+				<h3>Как я сделан?</h3>
+				<ul>
+					<li><i>top</i> и <i>left</i> 50%;</li>
+					<li><i>margin-top</i> и <i>margin-left</i> принимают половину высоты и ширины div соответственно;</li>
+					<li>фиксированая ширина и высота.</li>
+				</ul>
+				<h3>Плюсы:</h3>
+				<ul>
+					<li>Простота и лёгкость реализации;</li>
+					<li>Для изменения положения и размеров не используется js;</li>
+					<li>Скрывается прокрутка у body;</li>
+					<li>Для открытия и закрытия используются click события.</li>
+				</ul>
+				<h3>Минусы:</h3>
+				<ul>
+					<li>Уезжает за границы экрана / Появляется горизонтальная прокрутка.</li>
+				</ul>
+				<h3>Ещё текст</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+			</div>
+		</div>
+
+		<div class="wrapper-popup3">
+			<div class="popup3">
+				<div>
+					<h2>Я — третий попап.</h2>
+					<h3>Как я сделан?</h3>
+					<ul>
+						<li>У меня двойной враппер. У первого — высота = высоте экрана и прокрутка, т.к. у второго высота — высота контента.</li>
+					</ul>
+					<h3>Плюсы:</h3>
+					<ul>
+						<li>Имитация прокрутки, подобной странице, мне кажется, так удобнее;</li>
+						<li>Для изменения положения и размеров не используется js;</li>
+						<li>Скрывается прокрутка у body;</li>
+						<li>Для открытия и закрытия используются click события.</li>
+					</ul>
+					<h3>Минусы:</h3>
+					<ul>
+						<li>Двойной враппер.</li>
+						<li>Уезжает за границы экрана, если очень узкая страница;</li>
+						<li>Появляется горизонтальная прокрутка.</li>
+					</ul>
+					<h3>Ещё текст</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="wrapper-popup4">
+			<div class="popup4">
+				<div>
+					<h2>Я — четвёртый попап.</h2>
+					<h3>Как я сделан?</h3>
+					<ul>
+						<li>У меня двойной враппер. У первого — высота = высоте экрана и прокрутка, т.к. у второго высота — высота контента. Так же используется медиа-квери изменения ширины попапа, при узком вьюпорте.</li>
+					</ul>
+					<h3>Плюсы:</h3>
+					<ul>
+						<li>Имитация прокрутки, подобной странице, мне кажется, так удобнее;</li>
+						<li>Для изменения положения и размеров не используется js;</li>
+						<li>Скрывается прокрутка у body;</li>
+						<li>Для открытия и закрытия используются click события.</li>
+					</ul>
+					<h3>Минусы:</h3>
+					<ul>
+						<li>Двойной враппер;</li>
+						<li>Используется @media.</li>
+					</ul>
+					<h3>Ещё текст</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="popup5">
+			<div>
+				<h2>Я — пятый попап.</h2>
+				<h3>Как я сделан?</h3>
+				<ul>
+					<li><i>top</i> и <i>left</i> 50%;</li>
+					<li><i>margin-top</i> и <i>margin-left</i> принимают половину высоты и ширины div соответственно;</li>
+					<li>высота и ширина считается функцией в зависимости от ширины или высоты экрана.</li>
+				</ul>
+				<h3>Плюсы:</h3>
+				<ul>
+					<li>Простота и лёгкость реализации;</li>
+					<li>Скрывается прокрутка у body;</li>
+					<li>Корректно отображается на маленьких экранах;</li>
+					<li>Для открытия и закрытия используются click события.</li>
+				</ul>
+				<h3>Минусы:</h3>
+				<ul>
+					<li>Функция смотрит на изменения размеров окна и меняет css стили;</li>
+					<li>Используется js для корректного отображения на меньших экранах, чем попап.</li>
+				</ul>
+				<h3>Ещё текст</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices, magna id convallis auctor, felis erat tincidunt justo, ac sodales nunc arcu ut ex. In convallis euismod ipsum, in tincidunt lacus sodales sed. Nunc in mi elit. Nulla faucibus porttitor iaculis. Sed varius turpis id justo euismod, id dictum sem facilisis. Proin auctor purus sed metus dignissim, accumsan consequat nisi cursus. Maecenas ultrices eros nulla, in elementum lacus cursus eget. Vestibulum eget tempus neque. Integer porttitor augue dolor. Vivamus sodales dolor sit amet ex dapibus, eu ullamcorper nisi dictum. Vivamus libero urna, facilisis quis mi vel, pharetra finibus lectus. Proin semper auctor posuere. Duis tincidunt lacus sit amet consectetur scelerisque. Donec quis urna eros. Donec pretium nunc fermentum neque auctor iaculis.</p>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

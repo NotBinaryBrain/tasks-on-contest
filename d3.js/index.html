@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>D3.js</title>
+	<script type="text/javascript" src="./js/d3.js"></script>
+	<style>
+		body, html {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+<body>
+<script type="text/javascript">
+(function () {
+	var W = 500,    // Ширина полотна
+		H = 300,    // Высота полотна
+		RAD = 20;   // Радиус шаров
+
+	var svg = d3.select("body").append("svg:svg")
+			.attr("width", W)
+			.attr("height", H)
+			.on("mousemove", function() {
+				var nearby = [],
+					mc = d3.svg.mouse(this),
+					c1 = { cx: mc[0], cy: mc[1], r: RAD };
+
+				svg.selectAll("circle").each(function () {
+					switch (this.nodeName) {
+						case "circle":
+							var c2 = {
+								cx: + this.getAttribute("cx"),
+								cy: + this.getAttribute("cy"),
+								r: + this.getAttribute("r")
+							};
+							// Проверяем пересечение шара и мышки
+							if (circleOverlapQ(c1, c2)) {
+
+								// Вычисляем в какую сторону нужно лететь шарам
+								var u = Math.atan2 (mc[0] - c2.cx, mc[1] - c2.cy),
+									x = W * Math.cos (u);
+									y = W * Math.sin (u);
+
+								// Делаем анимацию нужных шаров
+								d3.select(this).each(animate(x, y));
+							}
+							break;
+
+						default:
+							console.log("shape not supported");
+					}
+				});
+			});
+
+	svg.selectAll("circle")
+		.data([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21])
+		.enter().append("svg:circle")
+		.attr("r", RAD - 5)
+		.attr("fill", "red")
+		.attr("cx", function() { return W * Math.random(); })
+		.attr("cy", function() { return H * Math.random(); })
+		.each(animate());
+
+	// проверяем пересечение
+	function circleOverlapQ (c1, c2) {
+		var distance = Math.sqrt( Math.pow(c2.cx - c1.cx, 2) + Math.pow(c2.cy - c1.cy, 2));
+
+		return distance < (c1.r + c2.r);
+	}
+
+	// меняем цвет и позицию
+	function animate(fl_x, fl_y) {
+
+		var animateFunction = function () {
+			var	colors = ['red', 'yellow'],
+				coords = [W * Math.random(), H * Math.random()];
+
+			d3.select(this)
+				.transition()
+				.ease("linear")
+
+				// Если шару улетают от курсора, то быстрая анимация
+				.duration(((fl_x || fl_y) ? 400 : 5000))
+
+				// Ставим координаты полёта от курсора или просто новые координаты движения
+				.attr("cx",  (fl_x ? fl_x : coords[0]))
+				.attr("cy",  (fl_y ? fl_y : coords[1]))
+
+				// Ставим рандомный цвет
+				.attr("fill", colors[Number(Math.random() >= .5)])
+
+				// Повторяем анимашку
+				.each("end", animateFunction);
+
+			fl_x = null;
+			fl_y = null;
+		};
+
+		return animateFunction;
+	}
+})();
+
+</script>
+</body>
+</html>
