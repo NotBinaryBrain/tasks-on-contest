@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Equalizr</title>
+	<meta charset="utf-8"/>
+	<style>
+		.equalizer-wrapper {
+			float: left;
+			margin: 0 20px 20px 0;
+		}
+		.equalizer {
+			overflow: hidden;
+			border: 1px solid #ddd;
+			vertical-align: bottom;
+		}
+		.equalizer span {
+			vertical-align: bottom;
+			display: inline-block;
+			height: 0;
+			background-color: pink;
+			border-top: 2px solid red;
+		}
+		.equalizer.small {
+			width: 100px;
+			height: 100px;
+			line-height: 100px;
+		}
+		.equalizer.normal {
+			width: 200px;
+			height: 200px;
+			line-height: 200px;
+		}
+		.equalizer.big {
+			width: 300px;
+			height: 300px;
+			line-height: 300px;
+		}
+	</style>
+	<script>
+		// Эквалайзер
+		var EQ = (function () {
+
+			var Equalizer;
+
+			Equalizer = function (selector, timeout, colWidth) {
+				this.initialize(selector, timeout, colWidth);
+				this.createStripes();
+				this.animation();
+			};
+
+			Equalizer.prototype = {
+
+				// Инициализируем переменные
+				initialize: function (selector, timeout, colWidth) {
+					this.selector = selector || this.selector;
+					this.el = document.querySelector(selector) || this.el;
+					this.timeout = timeout || 1000;
+					this.colWidth = colWidth || 2;
+					this.elWidth = this.el.clientWidth || 100;
+					this.elHeight = this.el.clientHeight || 100;
+					this.colQuantity = this.colWidth == 1 ? this.elWidth : this.elWidth / this.colWidth ^ 0;
+				},
+
+				// Вставляем spans в эквалайзер
+				createStripes: function () {
+					var span = '<span></span>',
+						cachedSpans = '',
+						sheet = this.getStylesheet(),
+						halfTimeout = this.timeout / 2 ^ 0;
+
+					// Собираем все span'ы и вставляем в эквалайзер
+					for (var i = this.colQuantity + 1; i -= 1;) {
+						cachedSpans = cachedSpans + span;
+					}
+					this.el.innerHTML = cachedSpans;
+
+					// ставим нужную ширину для span и время анимации
+					this.addCSSRule(
+							sheet,
+							this.selector + ' span',
+							'width: ' + this.colWidth + 'px !important;' +
+							'height: ' + (this.elHeight / 2 ^ 0) + 'px;'+
+							'-webkit-transition: height ' + halfTimeout + 'ms linear;' +
+							'-moz-transition: height ' + halfTimeout + 'ms linear;' +
+							'-o-transition: height ' + halfTimeout + 'ms linear;' +
+							'transition: height ' + halfTimeout + 'ms;'
+					);
+				},
+
+				// шаг анимации
+				animationStep: function () {
+					var that = this;
+
+					[].forEach.call(
+							that.el.querySelectorAll('span'),
+							function (el) {
+
+								// ставим рандомную высоту
+								var colHeight = that.elHeight * Math.random() ^ 0;
+								el.style.height = colHeight + 'px';
+
+								// возвращаем к исходному
+								setTimeout(function () {
+									el.style.height = (that.elHeight / 2 ^ 0) + 'px';
+								}, (that.timeout / 2 ^ 0));
+							}
+					);
+				},
+
+				// генерируем повтор анимации
+				animation: function() {
+					var that = this;
+
+					that.animationStep();
+
+					setInterval(function () {
+						that.animationStep();
+					}, that.timeout);
+				},
+
+				// Получаем таблицу стилей. Если её нет, то создаём её.
+				getStylesheet: function () {
+					var style = document.styleSheets[0];
+
+					// Если есть стайлщит, то возвращаем
+					if (style)
+						return style;
+
+					// Если нет, то создаём его и добавляем в DOM
+					style = document.createElement("style");
+					style.appendChild(document.createTextNode(""));
+					document.head.appendChild(style);
+
+					return style.sheet;
+				},
+
+				// Добавляем стиль в таблицу стилей
+				addCSSRule: function (sheet, selector, rules, index) {
+					if("insertRule" in sheet) {
+						sheet.insertRule(selector + "{" + rules + "}", index);
+					}
+					else if("addRule" in sheet) {
+						sheet.addRule(selector, rules, index);
+					}
+				}
+			};
+
+			// Возвращем конструктор
+			return Equalizer;
+		})();
+
+		window.onload = function () {
+			var e1 = new EQ("#eq_1 .equalizer"),
+				e2 = new EQ("#eq_2 .equalizer"),
+				e3 = new EQ("#eq_3 .equalizer");
+		};
+	</script>
+</head>
+<body>
+	<h1>Equalizers</h1>
+	<div id="eq_1" class="equalizer-wrapper">
+		<h2>First</h2>
+		<div class="equalizer small"></div>
+	</div>
+	<div id="eq_2" class="equalizer-wrapper">
+		<h2>Second</h2>
+		<div class="equalizer normal"></div>
+	</div>
+	<div id="eq_3" class="equalizer-wrapper">
+		<h2>Third</h2>
+		<div class="equalizer big"></div>
+	</div>
+</body>
+</html>
